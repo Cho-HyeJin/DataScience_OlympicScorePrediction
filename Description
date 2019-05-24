@@ -1,0 +1,5 @@
+Predicting score in olympic(we calculate it with gold=100, silver=1, bronze=0.01) by GDP, area of country.
+Attribute of data set: ID, Name, Sex, Age, Height, Weight, Team, NOC, Games, Year, Season, City, Sport, Event, Medal, GDP, Area
+Predict data of current years' score by data of previous game.
+Validate by linear regression, KNN.(calculate accuracy with predicted value and  original value of current year).
+Data set from 'Kaggle'.
