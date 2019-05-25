@@ -1,11 +1,29 @@
 import pandas as pd
 
-df=pd.read_csv('C:\\Users\parks\\Desktop\\athlete_events.csv', encoding='utf-8')
-
-# unique(팀전일 때 하나만 남기기)
+df=pd.read_csv('athlete_events.csv', encoding='utf-8')
 
 
 df=df.dropna(axis='rows')
+
+
+# 분석에 필요한 값만 남김
+df=df.drop('Sex', axis=1)
+df=df.drop('Age', axis=1)
+df=df.drop('Height', axis=1)
+df=df.drop('Weight', axis=1)
+df=df.drop('Team', axis=1)
+df=df.drop('City', axis=1)
+
+df=df.drop('Games', axis=1)
+df=df.drop('ID', axis=1)
+df=df.drop('Name', axis=1)
+
+# 분석에 필요한 값만 남겼으므로 중복이 있으면 같은 경기, 같은 선수단 인 것(팀전) -> 삭제
+df.drop_duplicates()
+
+# summer, winter 분류
+df_summer=df[df['Season'].isin(['Summer'])]
+df_winter=df[df['Season'].isin(['Winter'])]
 
 counts=pd.DataFrame(df['NOC'].value_counts())
 
@@ -17,8 +35,8 @@ df_score=0
 # index가 NOC
 df_score=pd.DataFrame(columns=('Year','Score'))
 
-value_list = df['NOC'].unique()
-value_list_2=df['Year'].unique()
+value_list = df_summer['NOC'].unique()
+value_list_2=df_summer['Year'].unique()
 
 for i in value_list:
     # 나라별로 분류한 DataFrame
@@ -30,11 +48,12 @@ for i in value_list:
         if a.index.contains('Gold'):
             gold=a.loc['Gold','Medal']
         if a.index.contains('Silver'):
-            gold=a.loc['Silver','Medal']
+            silver=a.loc['Silver','Medal']
         if a.index.contains('Bronze'):
-            gold=a.loc['Bronze','Medal']
+            bronze=a.loc['Bronze','Medal']
         score=gold*100+silver+bronze*0.01
         df_score.loc[i]=[j,score]
-
 print(df_score)
+
+
         
