@@ -38,8 +38,6 @@ gdp_df=gdp_df.drop('Area', axis=1)
 
 print(gdp_df)
 
-gdp_df2000=gdp_df['Year'].isin(['2000'])
-print(gdp_df)
 gold=0
 silver=0
 bronze=0
@@ -89,55 +87,65 @@ def calScores(df):
 #Summer : 2000~2016 -> 총 5개 ----------------------------------------
 calScores(df_summer_2000)
 df_score_2000Summer=df_score
-df_score_2000Summer=pd.merge(df_score_2000Summer, gdp_df)
+gdp_df2000= gdp_df[gdp_df['Year'].isin(['2000'])]
+print(df_score_2000Summer)
+df_score_2000Summer=pd.merge(df_score_2000Summer, gdp_df2000, on='NOC')
 df_score_2000Summer=df_score_2000Summer.drop_duplicates()
 print(df_score_2000Summer)
 
 calScores(df_summer_2004)
 df_score_2004Summer=df_score
-df_score_2004Summer=pd.merge(df_score_2004Summer, gdp_df)
+gdp_df2004= gdp_df[gdp_df['Year'].isin(['2004'])]
+df_score_2004Summer=pd.merge(df_score_2004Summer, gdp_df2004, on='NOC')
 df_score_2004Summer=df_score_2004Summer.drop_duplicates()
 print(df_score_2004Summer)
 
 calScores(df_summer_2008)
 df_score_2008Summer=df_score
-df_score_2008Summer=pd.merge(df_score_2008Summer, gdp_df)
+gdp_df2008= gdp_df[gdp_df['Year'].isin(['2008'])]
+df_score_2008Summer=pd.merge(df_score_2008Summer, gdp_df2008, on='NOC')
 df_score_2008Summer=df_score_2008Summer.drop_duplicates()
 print(df_score_2008Summer)
 
 calScores(df_summer_2012)
 df_score_2012Summer=df_score
-df_score_2012Summer=pd.merge(df_score_2012Summer, gdp_df)
-df_score_2012Summer=pddf_score_2012Summer.drop_duplicates()
+gdp_df2012= gdp_df[gdp_df['Year'].isin(['2012'])]
+df_score_2012Summer=pd.merge(df_score_2012Summer, gdp_df2012, on='NOC')
+df_score_2012Summer=df_score_2012Summer.drop_duplicates()
 print(df_score_2012Summer)
 
 calScores(df_summer_2016)
 df_score_2016Summer=df_score
-df_score_2016Summer=pd.merge(df_score_2016Summer, gdp_df)
+gdp_df2016= gdp_df[gdp_df['Year'].isin(['2016'])]
+df_score_2016Summer=pd.merge(df_score_2016Summer, gdp_df2016, on='NOC')
 df_score_2016Summer=df_score_2016Summer.drop_duplicates()
 print(df_score_2016Summer)
 
 #Winter : 2002~2014 -> 총 4개 ----------------------------------------------
 calScores(df_winter_2002)
 df_score_2002Winter=df_score
-df_score_2002Winter=pd.merge(df_score_2002Winter, gdp_df)
+gdp_df2002= gdp_df[gdp_df['Year'].isin(['2002'])]
+df_score_2002Winter=pd.merge(df_score_2002Winter, gdp_df2002, on='NOC')
 df_score_2002Winter=df_score_2002Winter.drop_duplicates()
 print(df_score_2002Winter)
 
 calScores(df_winter_2006)
 df_score_2006Winter=df_score
-df_score_2006Winter=pd.merge(df_score_2006Winter, gdp_df)
+gdp_df2006= gdp_df[gdp_df['Year'].isin(['2006'])]
+df_score_2006Winter=pd.merge(df_score_2006Winter, gdp_df, on ='NOC')
 df_score_2006Winter=df_score_2006Winter.drop_duplicates()
 print(df_score_2006Winter)
 
 calScores(df_winter_2010)
 df_score_2010Winter=df_score
-df_score_2010Winter=pd.merge(df_score_2010Winter, gdp_df)
+gdp_df2010= gdp_df[gdp_df['Year'].isin(['2010'])]
+df_score_2010Winter=pd.merge(df_score_2010Winter, gdp_df, on='NOC')
 df_score_2010Winter=df_score_2010Winter.drop_duplicates()
 print(df_score_2010Winter)
 
 calScores(df_winter_2014)
 df_score_2014Winter=df_score
-df_score_2014Winter=pd.merge(df_score_2014Winter, gdp_df)
+gdp_df2016= gdp_df[gdp_df['Year'].isin(['2014'])]
+df_score_2014Winter=pd.merge(df_score_2014Winter, gdp_df, on='NOC')
 df_score_2014Winter=df_score_2014Winter.drop_duplicates()
 print(df_score_2014Winter)
