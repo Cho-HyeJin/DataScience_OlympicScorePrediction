@@ -58,3 +58,4 @@ athlete_df['Area']=area
 
 print(athlete_df)
 
+athlete_df.to_csv('athlete_events.csv',index=False,header=False)
