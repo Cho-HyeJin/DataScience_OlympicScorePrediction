@@ -2,11 +2,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn import linear_model
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
+import statistics as st
+from collections import Counter
 
 # read file
 athlete_df = pd.read_csv("athlete_events.csv")
-
 
 # ===========================SCORE============================
 
@@ -156,7 +158,12 @@ winter_df = pd.concat(frames_winter)
 summer_k_fold = KFold(n_splits=5, shuffle=False)
 
 pre_summer_score_set = []
+groupTest=[]
+groupSummer=[]
 
+i=0
+
+pred_scoreAll=[]
 for train_index, test_index in summer_k_fold.split(summer_df):
     train_df = summer_df.iloc[train_index, :]
     test_df = summer_df.iloc[test_index, :]
@@ -173,34 +180,34 @@ for train_index, test_index in summer_k_fold.split(summer_df):
     plt.plot(px, py, color="r")
     plt.xlabel("GDP")
     plt.ylabel("score")
-    plt.show()
+#    plt.show()
+#    print(test_df)
+    test_df_GDP=test_df['GDP'][:, np.newaxis]
+    pred_score=reg.predict(test_df_GDP)
+    test_score=((test_df['Score'].values-(test_df['Score'].values % 1300))/1300)
+    pred_score=((pred_score-(pred_score % 1300))/1300)
+    pred_scoreAll.append(pred_score)
+    i+=1
+#    print(test_score)
+#    print(pred_score)
+#    print(accuracy_score(test_score, pred_score))
 
-    for i in range(len(test_df)):
-        pre_score = reg.coef_ * test_df.iloc[i, 2] + reg.intercept_
-        test_df.iat[i, 1] = pre_score
+print(pred_scoreAll)
+voted_scoreGrade=[]
+for i in range(len(pred_scoreAll[0])-1):
+    pred_i=[pred_scoreAll[0][i], pred_scoreAll[1][i], pred_scoreAll[2][i], pred_scoreAll[3][i], pred_scoreAll[4][i]]
+#    print(pred_i)
+    cnt= Counter(pred_i)
+#    print(cnt)
+    cnt_mode=cnt.most_common(1)
+#    print(cnt_mode)
+#    print(cnt_mode[0][0])
+    voted_scoreGrade.append(cnt_mode[0][0])
 
-    pre_summer_score_set.append(test_df)
+print(accuracy_score(test_score, voted_scoreGrade))
 
-
-pre_df = pd.concat(pre_summer_score_set)
-
-summer_df = summer_df.sort_values('Score', ascending=False)
-pre_df = pre_df.sort_values('Score', ascending=False)
-
-count = 0
-for i in range(len(summer_df)):
-    if summer_df.iloc[i, 0] == pre_df.iloc[i, 0]:
-        count += 1
-
-print("\nUsing data: summer olympic - GDP, Score", "\nAlgorithm: Linear Regression", "\nEvaluation Method: K fold / k = 5")
-print("Accuracy: ", count/len(summer_df) * 100, "%")
-
-
-winter_k_fold = KFold(n_splits=4, shuffle=False)
-
-pre_winter_score_set = []
-
-for train_index, test_index in winter_k_fold.split(winter_df):
+pred_scoreAll=[]
+for train_index, test_index in summer_k_fold.split(winter_df):
     train_df = winter_df.iloc[train_index, :]
     test_df = winter_df.iloc[test_index, :]
 
@@ -216,25 +223,28 @@ for train_index, test_index in winter_k_fold.split(winter_df):
     plt.plot(px, py, color="r")
     plt.xlabel("GDP")
     plt.ylabel("score")
-    plt.show()
+#    plt.show()
+#    print(test_df)
+    test_df_GDP=test_df['GDP'][:, np.newaxis]
+    pred_score=reg.predict(test_df_GDP)
+    test_score=((test_df['Score'].values-(test_df['Score'].values % 700))/700)
+    pred_score=((pred_score-(pred_score % 700))/700)
+    pred_scoreAll.append(pred_score)
+    i+=1
+#    print(test_score)
+#    print(pred_score)
+#    print(accuracy_score(test_score, pred_score))
 
-    for i in range(len(test_df)):
-        pre_score = reg.coef_ * test_df.iloc[i, 2] + reg.intercept_
-        test_df.iat[i, 1] = pre_score
+print(pred_scoreAll)
+voted_scoreGrade=[]
+for i in range(len(pred_scoreAll[0])-1):
+    pred_i=[pred_scoreAll[0][i], pred_scoreAll[1][i], pred_scoreAll[2][i], pred_scoreAll[3][i], pred_scoreAll[4][i]]
+#    print(pred_i)
+    cnt= Counter(pred_i)
+#    print(cnt)
+    cnt_mode=cnt.most_common(1)
+#    print(cnt_mode)
+#    print(cnt_mode[0][0])
+    voted_scoreGrade.append(cnt_mode[0][0])
 
-    pre_winter_score_set.append(test_df)
-
-
-pre_df = pd.concat(pre_winter_score_set)
-
-winter_df = winter_df.sort_values('Score', ascending=False)
-pre_df = pre_df.sort_values('Score', ascending=False)
-
-count = 0
-for i in range(len(winter_df)):
-    if winter_df.iloc[i, 0] == pre_df.iloc[i, 0]:
-        count += 1
-
-print("\nUsing data: winter olympic - GDP, Score", "\nAlgorithm: Linear Regression", "\nEvaluation Method: K fold / k = 4")
-print("Accuracy: ", count/len(winter_df) * 100, "%")
-
+print(accuracy_score(test_score, voted_scoreGrade))
