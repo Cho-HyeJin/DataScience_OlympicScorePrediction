@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 from sklearn import linear_model
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+import math
+from sklearn.metrics import confusion_matrix
+from sklearn import tree
 
 # read file
 athlete_df = pd.read_csv("athlete_events.csv")
@@ -31,14 +34,11 @@ athlete_df=athlete_df.drop('Name', axis=1)
 
 # 분석에 필요한 값만 남겼으므로 중복이 있으면 같은 경기, 같은 선수단 인 것(팀전) -> 삭제
 athlete_df.drop_duplicates()
-print(athlete_df.columns)
 
 gdp_df=athlete_df.drop('Sport', axis=1)
 gdp_df=gdp_df.drop('Event', axis=1)
 gdp_df=gdp_df.drop('Medal', axis=1)
 gdp_df=gdp_df.drop('Area', axis=1)
-
-print(gdp_df)
 
 gold=0
 silver=0
@@ -103,18 +103,26 @@ def linRegGDP(df):
 def holdOut(df):
     # split training dataset and testing dataset
     df= df.dropna()
-    print(df)
-    X=df['GDP'].values
-    y=df['Score'].values
-    X=X.reshape(len(X),1)
-    y=y.reshape(len(y),1)
+    X=df['GDP']
+    y=df['Score']
+    X=X[:,np.newaxis]
+    y=y[:,np.newaxis]
     X_train, X_test, y_train, y_test= train_test_split(X, y, test_size=0.1)
+    print(X_train, X_test, y_train, y_test)
     regr = linear_model.LinearRegression()
     regr.fit(X_train,y_train)
     y_pred=regr.predict(X_test)
-    print(y_pred)
-    print("accuracy: ", accuracy_score(y_test, y_pred))
-
+    y_test=y_test[:,-1].astype(int)
+    y_pred= y_pred[:,-1].astype(int)
+    groupTest=[]
+    groupPred=[]
+    for i in range(len(y_test)):
+        groupTest.append((y_test[i]-(y_test[i]%1300))/1300)
+    for i in range(len(y_pred)):
+        groupPred.append((y_pred[i]-(y_pred[i]%1300))/1300)
+    print(groupPred, groupTest)
+    print("accuracy: ", accuracy_score(groupPred, groupTest))
+    
 #Summer : 2000~2016 -> 총 5개 ----------------------------------------
 
 calScores(df_summer_2000)
@@ -185,7 +193,7 @@ df_score_2014Winter=df_score_2014Winter.drop_duplicates()
 df_score_summer=pd.concat([df_score_2000Summer,df_score_2004Summer,df_score_2008Summer,df_score_2012Summer,df_score_2016Summer])
 df_score_winter=pd.concat([df_score_2002Winter, df_score_2006Winter, df_score_2010Winter, df_score_2014Winter])
 # GDP Regression
-linRegGDP(df_score_summer)
-linRegGDP(df_score_winter)
+#linRegGDP(df_score_summer)
+#linRegGDP(df_score_winter)
 
 holdOut(df_score_summer)
